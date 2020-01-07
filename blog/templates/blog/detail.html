@@ -1,9 +1,9 @@
 {% extends '_base.html' %}
 
 {% block content %}
-    
-{{ object.content }}
 
+<h1>{{ object.title }}</h1>
+{{ object.formatted_markdown | safe }}
 
 {% endblock content %}
     
