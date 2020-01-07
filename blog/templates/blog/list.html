@@ -8,7 +8,18 @@
     <ul>
         
         {% for object in object_list %}
-            <li><a href="{% url 'blog:detail' object.pk %}">{{ object.title }}</a></li>
+            <li>
+                <a href="{% url 'blog:detail' object.pk %}">{{ object.title }}</a>
+                <p><small>
+                    {{ object.description }}
+                </small>
+                </p>
+                <small>
+                    {% for tag in object.tags.all %}
+                        {{ tag.name }}
+                    {% endfor %}     
+                </small>
+            </li>
         {% endfor %}
             
     </ul>

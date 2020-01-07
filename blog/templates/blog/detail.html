@@ -3,6 +3,17 @@
 {% block content %}
 
 <h1>{{ object.title }}</h1>
+<p>
+    <small>{{ object.description }}</small>
+</p>
+
+{% for tag in object.tags.all %}
+    <small>{{ tag.name }}</small>    
+{% endfor %}
+    
+<p>作成日 {{ object.created_at }}</p>
+<p>更新日 {{ object.updated_at }}</p>
+
 {{ object.formatted_markdown | safe }}
 
 {% endblock content %}
