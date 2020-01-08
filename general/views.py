@@ -5,3 +5,9 @@ from django.views.generic import TemplateView
 
 class IndexView(TemplateView):
     template_name = 'general/index.html'
+
+class AboutView(TemplateView):
+    pass 
+
+class ContactView(TemplateView):
+    pass
