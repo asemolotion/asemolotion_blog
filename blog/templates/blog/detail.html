@@ -2,19 +2,32 @@
 
 {% block content %}
 
-<h1>{{ object.title }}</h1>
-<p>
-    <small>{{ object.description }}</small>
-</p>
+<div class='bg-light px-3 py-3 mt-3'>
+    <div class='mt-3'>
+        <section id='title'>
+            <span>{{ object.project.name }}</span>
+            <h4>{{ object.title }}</h4>
+            <div>
+                {% for tag in object.tags.all %}
+                <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>    
+                {% endfor %}           
+            </div>
+        </section>
+    </div>
 
-{% for tag in object.tags.all %}
-    <small>{{ tag.name }}</small>    
-{% endfor %}
-    
-<p>作成日 {{ object.created_at }}</p>
-<p>更新日 {{ object.updated_at }}</p>
+    <div>
+        <section id='meta'>
+            <p><small>作成日 {{ object.created_at }}</small><br>
+                <small>更新日 {{ object.updated_at }}</small></p>
+        </section>
+    </div>
+</div>
 
-{{ object.formatted_markdown | safe }}
+<div class='container my-4 bg-white'>
+    <section id='markdowncontent'>
+        {{ object.formatted_markdown | safe }}
+    </section>
+</div>
 
 {% endblock content %}
     
