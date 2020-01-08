@@ -35,6 +35,8 @@ INSTALLED_APPS = [
 
     # 3rd party
     'markdownx',
+    'storages',
+    'django_cleanup'
 ]
 
 MIDDLEWARE = [
