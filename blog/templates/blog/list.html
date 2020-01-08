@@ -30,7 +30,13 @@
                         <h5>
                             <a href="{% url 'blog:detail' object.pk %}">{{ object.title }}</a>
                         </h5>
+                        
+                        
+                        {% if object.description %}
                         <p><small>{{ object.description }}</small></p>
+                        {% endif %}
+                            
+
             
                         {% for tag in object.tags.all %}
                         <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>    
