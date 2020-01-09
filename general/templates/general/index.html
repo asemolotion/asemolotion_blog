@@ -2,9 +2,29 @@
 
 
 {% block content %}
-    <h1>Topページ</h1>
 
-    <a href="{% url 'blog:list' %}">ブログ一覧</a>
+<!-- タイトル -->
+<div class='mt-3'>
+    <section id='title'>
+        <h5 class='text-secondary'>トップページ</h5>    
+    </section>
+</div>
+
+<!-- 最新ブログ投稿 -->
+<div class='mt-3'>
+    <section id='posts' class='border-info'>
+        
+        {% for post in post_list %}
+            
+        <div>{{ post.title }}</div>
+        {% endfor %}
+            
+
+        <a href="{% url 'blog:list' %}">ブログ一覧をみる</a>
+    </section>
+</div>
+
+    
 
 {% endblock content %}
     
