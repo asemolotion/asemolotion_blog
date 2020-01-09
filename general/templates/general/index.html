@@ -73,5 +73,21 @@
 </div>
     
 
+<!-- タグ -->
+<div class='my-3'>
+        <section id='tags'>
+            
+            <h6>タグから探す</h6>
+    
+            <div class='border rounded px-2 py-2'>
+    
+            {% for tag in tag_list %}        
+            <a href="#" class='btn btn-sm btn-info'>{{ tag.name }}</a>
+            {% endfor %}
+    
+            </div>
+        </section>
+    </div>
+
 {% endblock content %}
     

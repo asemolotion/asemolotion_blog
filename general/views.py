@@ -15,11 +15,18 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Postのリスト
-        context['post_list'] = Post.objects.filter().order_by('-created_at')[:self.POST_ITEM_COUNT]
+        # Postのリスト 公開かつ全員に公開のみ。
+        context['post_list'] = \
+            Post.objects\
+                .filter(status='released')\
+                .filter(release_condition='public')\
+                .order_by('-created_at')[:self.POST_ITEM_COUNT]
         
         # Projectのリスト
         context['project_list'] = Project.objects.order_by('timestamp')[:self.PROJECT_ITEM_COUNT]
+
+        # Tagのリスト
+        context['tag_list'] = Tag.objects.all()
 
         return context
     
