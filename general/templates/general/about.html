@@ -1,0 +1,118 @@
+{% extends '_base.html' %}
+
+
+{% block content %}
+    
+<!-- サイトについて -->
+<div class='mt-3'>
+    <section id='title' class='bg-warning px-2 py-2'>
+        <h5 class='text-secondary'>About This Site <small>このサイトについて</small></h5>
+        <p>
+            このサイトは私的な技術ブログです。いかなる企業、団体の利益に基づかない朗らかなブログを心がけています。
+        </p>
+        <p>
+            お気付きの点がございましたらContactページよりご連絡頂けますと幸いです。
+        </p>
+        <p>
+            通常の記事はArticleタグがついており、短いコードをShortCodeと呼び、ShortCodeタグをつけています。
+        </p>
+        
+    </section>
+</div>
+
+<!-- 認証コードについて -->
+<div class='mt-3'>
+        <section id='invitedcode' class='bg-warning px-2 py-2'>
+            <h5 class='text-secondary'>About Invited Code <small>招待コードについて</small></h5>
+    
+            <p>
+                このブログは私の就職活動や、仕事のご依頼を受ける際の参考としても利用しています。</p>
+            <p>
+                全ての方に公開するにふさわしくないかもしれないページがございます。
+            </p>
+            <p>
+                招待コードをお持ちのかたはサイトの下部に入力いただけますと、全ての内容をご確認いただけます。
+            </p>
+
+            <p>
+                コードにも期限がございますので、何かございましたら<a href="{% url 'general:contact' %}">Contactページ</a>よりご連絡いただけますと幸いです。
+            </p>
+    
+        </section>
+    </div>
+
+<!-- 私について -->
+<div class='mt-3'>
+    <section id='title'>
+        <h5 class='text-secondary'>About Me <small>私について</small></h5>
+
+        <table class='table'>
+                <tr>
+                    <th>NAME</th>
+                    <td>asemolotion</td>
+                </tr>
+                <tr>
+                    <th>BIRTH</th>
+                    <td>1990.4.19</td>
+                </tr>
+                <tr>
+                    <th>CITY</th>
+                    <td>長崎県長崎市</td>
+                </tr>
+                <tr>
+                    <th>HOBBY</th>
+                    <td>新聞や本を読んで過ごすこと・セルフ散髪・トレーニング</td>
+                </tr>
+                <tr>
+                    <th>SKILL</th>
+                    <td>☆☆Python・Django　☆Angular/Vue.jsなど</td>
+                </tr>
+                <tr>
+                    <th>WORKS</th>
+                    <td>
+                        <a href="#">ポートフォリオサイト</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>PROGRAMMING CAREER</th>
+                    <td>2017.04〜 独学で勉強しました</td>
+                </tr>
+                <tr>
+                    <th>EMAIL</th>
+                    <td>
+                        <a href="mailto:asemolotion@gmail.com">asemolotion@gmail.com</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>SNS</th>
+                    <td>
+                        <a href="">
+                            <img src="https://img.icons8.com/ios-filled/40/000000/github.png">
+                        </a><br>
+                        <small>this icon by <a href="https://icons8.com/icon/12599/ios-filled">iOS Filled icon by Icons8</a></small>
+                    </td>
+                </tr>
+                <tr>
+                    <th>COMMENT</th>
+                    <td>
+                        <p>
+                            長崎でフリーランスのプログラマをしていますasemolotionと言います。</p>
+                        <p>
+                            Aから始まる言葉で最初に思い浮かんだ言葉だったので「あせもローション」にしました。
+                            それ以上の意味はないです。
+                        </p>
+                        <p>
+                            私は独学でプログラミングを学んできましたので、その過程でできるようになったことをこのブログで記録して行こうと思います。</p>
+                        </p>
+                    </td>
+                </tr>
+        </table>
+
+    </section>
+</div>
+
+
+
+
+{% endblock content %}
+    
