@@ -47,8 +47,8 @@ def verify_invitation(request):
 
     if code == INVITATION_CODE:
         # 招待コード成功
-        request.session['invitation_code'] = 'ok'
-        
+        request.session['invitation_verification'] = 'ok'
+
 
 
     else:
@@ -58,4 +58,9 @@ def verify_invitation(request):
 
 
 
+    return redirect(reverse('general:index'))
+
+def clear_invitation(request):
+    if request.session.get('invitation_verification'):
+        del request.session['invitation_verification']
     return redirect(reverse('general:index'))

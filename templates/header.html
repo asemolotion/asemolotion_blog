@@ -1,5 +1,13 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
         <a class="navbar-brand" href="{% url 'general:index' %}">Asemolotion Blog</a>
+        
+        {% if request.session.invitation_verification == 'ok' %}
+        <span><b class='text-danger'>
+            認証済み招待ユーザ
+        </b>
+        </span>
+        {% endif %}
+                    
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber"
                 aria-expanded="false"
                 aria-label="ナビゲーションの切替">
@@ -23,6 +31,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">管理</a>
                 </li>
+
                 
                 {% if user.is_superuser %}
                 <li class="nav-item">

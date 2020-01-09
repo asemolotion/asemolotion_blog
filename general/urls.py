@@ -9,4 +9,5 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'),
 
     path('verify_invitaion/', verify_invitation, name='verify_invitation'),
+    path('clear_invitation/', clear_invitation, name='clear_invitation'),    
 ]
