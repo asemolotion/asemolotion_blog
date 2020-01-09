@@ -1,13 +1,12 @@
 <footer class='bg-light'>
 
-	<ul class='nav justify-content-center'>
-		<li class='nav-item mr-2'>
-			<a href="{% url 'general:index' %}"><small>サイトトップ</small></a>
-		</li>
-		<li class='nav-item mr-2'>
-			<a href="/admin"><small>管理ページ</small></a>
-		</li>
-	</ul>
+	<nav class='px-2 py-2 nav justify-content-center'>
+		<form action="{% url 'general:verify_invitation' %}" method='POST'>
+			{% csrf_token %}
+			<input type="text" class='border rounded' name='code' placeholder="招待コードを入力する">
+			<button type=submit class='btn btn-sm btn-outline-primary'>送信</button>
+		</form>
+	</nav>
 
 	<div class='container text-center'>
 		<p>

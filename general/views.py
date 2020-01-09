@@ -1,6 +1,8 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from django.shortcuts import render
+from django.urls import reverse
+from django.shortcuts import redirect
 
 from blog.models import Post, Project, Tag
 
@@ -37,3 +39,23 @@ class AboutView(TemplateView):
 
 class ContactView(TemplateView):
     template_name = 'general/contact.html'
+
+from conf.custom_variables import INVITATION_CODE
+def verify_invitation(request):
+    
+    code = request.POST.get('code')
+
+    if code == INVITATION_CODE:
+        # 招待コード成功
+        request.session['invitation_code'] = 'ok'
+        
+
+
+    else:
+        print('unverify')
+
+    print(code)
+
+
+
+    return redirect(reverse('general:index'))
