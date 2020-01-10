@@ -6,6 +6,8 @@ from django.db import models
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
+
+
 class Project(models.Model):
 	""" Postが所属するプロジェクト　"""
 	name = models.CharField('プロジェクト名', max_length=255)
@@ -95,23 +97,49 @@ class Post(models.Model):
 
 		# もともとあったfilepathを取り出して集合にする
 		old_filelinks_queryset = self.filelink_set.values_list('filepath', flat=True)
-		old_filelinks = set(list(old_filelinks_queryset))
-
+		old_filelinks = set(list(old_filelinks_queryset)) or set(())
+		
 		# ![](linkurl)という画像のマークアップを全て取り出す
+
+		# img_ptns = re.findall(
+		# 	r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(?:png|jpg|jpeg)',
+		# 	# r'!.*\.(jpg|png|jpeg)',
+		# 	# r'!\[\]\(https://asemolotion-blog\.s3\.amazonaws\.com/.*\.(jpeg|png|jpg)',
+		# 	# r'\!\[\]\(.*(\.jpg|\.png|\.jpeg)',
+		# 	self.content,
+		# )
+
+		# (?:...) non-capturing が大事　これがないと　| どっち、、ってなる短い方を取り出して終わられていた。
 		img_ptns = re.findall(
-			r'!\[\].*\.png',
-			self.content
+			r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(?:png|jpg|jpeg)',
+			self.content,
 		)
+
+		print('this is img_ptns')
+		print(img_ptns)
 
 		# 画像マークアップからファイルパスを全て取り出す
 		filelinks = []
 		for ptn in img_ptns:
-			filelink = re.search(r'/\w+/\w+/.*\.png', ptn).group()  # search()は最初の一個のみ。
-			filelinks.append(filelink)
+			
+			if settings.DEBUG:
+				# filelink = re.search(r'/\w+/\w+/.*\.(png|jpg|jpeg)', ptn).group()  # search()は最初の一個のみ。
+				
+				filelink = '/media/markdownx/' + ptn
+				filelinks.append(filelink)
+			else:  # aws s3の時
+				# filelink = re.search(r'https://asemolotion-blog\.s3\.amazonaws\.com/markdownx/.*\.png').group()
+				
+				filelink = 'https://asemolotion-blog.s3.amazonaws.com/markdownx/' + ptn
+				filelinks.append(filelink)
+
+		print('this is filelinks ')
+		print(filelinks)
 
 		# filelinksになくて、old_filelinksにあるものを消す
 		filelinks_diff = list(old_filelinks - set(filelinks))
 		
+
 		for diff in filelinks_diff:
 			# FileLinkデータを消す
 			FileLink.objects.filter(
@@ -127,16 +155,34 @@ class Post(models.Model):
 			
 			else:
 				# s3で
-				s3 = boto3.resource('s3')
+
+				try:
+					# ローカルプロダクションの時は環境変数から取れないので、読み込む
+					from conf.local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+					session = boto3.Session(
+						aws_access_key_id=AWS_ACCESS_KEY_ID,
+						aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+					)
+					s3 = session.resource('s3')
+					print('l167 of models.py s3 read from try')
+				except:
+					s3 = boto3.resource('s3')
+					print('l167 of models.py s3 read from except')
+
 				bucket = s3.Bucket('asemolotion-blog')
 				
-				diff = '/'.join(diff.split('/')[2:])
+				diff = '/'.join(diff.split('/')[3:])
+
+				# diff = '/'.join(diff.split('/')[2:])
 				# '/media/markdownx/b09354f2-24a2-481c-8593-39f781caf38a.png'
 				# を 
 				# 'markdownx/b09354f2-24a2-481c-8593-39f781caf38a.png'　にする。
+				print(diff)
 				
-				bucket.delete_object(diff)
+				# bucket.delete_object(diff)　ではなく、
+				s3.Object('asemolotion-blog', diff).delete()
 				
+				print('finish delete_object')				
 
 		# 今あるものはそのまま、追加分は追加の update_or_create()
 		for filelink in filelinks:
@@ -144,7 +190,7 @@ class Post(models.Model):
 				filepath = filelink,
 				post = self
 			)
-		
+			
 		
 		
 
