@@ -1,5 +1,6 @@
 import os
 import re
+import boto3
 from django.conf import settings
 from django.db import models
 from markdownx.models import MarkdownxField
@@ -118,12 +119,18 @@ class Post(models.Model):
 			).delete()
 
 			print('消すもの: ', diff)
-			delete_filepath = os.path.abspath(os.path.join(settings.BASE_DIR, diff[1:]))  # diff もslashスタートなので、ルートと思ってjoinできない。
-			print('ファイルパスは: ', delete_filepath)
-			
 			# ファイルの実体を消す
-			os.remove(delete_filepath)
-
+			if settings.DEBUG:				
+				delete_filepath = os.path.abspath(os.path.join(settings.BASE_DIR, diff[1:]))  # diff もslashスタートなので、ルートと思ってjoinできない。
+				print('ファイルパスは: ', delete_filepath)
+				os.remove(delete_filepath)
+			
+			else:
+				# s3で
+				s3 = boto3.resource('s3')
+				bucket = s3.Bucket('asemolotion-blog')
+				bucket.delete_object(diff)
+				
 
 		# 今あるものはそのまま、追加分は追加の update_or_create()
 		for filelink in filelinks:
