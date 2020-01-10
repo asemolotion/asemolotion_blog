@@ -1,0 +1,28 @@
+{% extends '_base.html' %}
+
+
+{% block content %}
+    
+<div>
+    <section id='title'>
+        <h5>{{ tag.name }} の記事一覧 </h5>
+    </section>
+</div>
+
+
+<div>
+    <section id='postlist'>
+
+        
+        {% for object in object_list %}
+            
+            {{ object.title }}
+
+        {% endfor %}
+            
+        
+    </section>
+</div>
+
+{% endblock content %}
+    

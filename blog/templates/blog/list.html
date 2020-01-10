@@ -84,7 +84,7 @@
             <div class='list-group my-3'>
                 <li class="list-group-item list-group-item-secondary">Projects</li>
                 {% for project in project_list %}
-                <a href="#" class='list-group-item list-group-item-action'>{{ project.name }}</a>    
+                <a href="{% url 'blog:project' project.slug %}" class='list-group-item list-group-item-action'>{{ project.name }}</a>    
                 {% endfor %}
                 <a href="#" class='list-group-item list-group-item-action'> &gt;&gt;&gt; 全てのプロジェクトをみる</a>    
             </div>
@@ -96,7 +96,10 @@
 
                     <h5>
                         {% for tag in tag_list %}
-                        <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>
+                        <span class='badge badge-pill badge-info font-weight-light'>
+                            <a href="{% url 'blog:tag' tag.slug %}" class='text-white'>
+                                {{ tag.name }}
+                            </a></span>
                         {% endfor %}
                     </h5>
                     
