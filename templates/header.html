@@ -1,8 +1,14 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
         <a class="navbar-brand" href="{% url 'general:index' %}">Asemolotion Blog</a>
         
-        {% if request.session.invitation_verification == 'ok' %}
-        <span><b class='text-danger'>
+        <!-- 閲覧者ステータスの明示 -->
+        {% if request.user.is_superuser %}
+       <span class='border rounded border-danger px-1 py-1'><b class='text-danger'>
+            Superuser
+        </b>
+        </span>            
+        {% elif request.session.invitation_verification == 'ok' %}
+        <span class='border rounded border-danger px-1 py-1'><b class='text-danger'>
             認証済み招待ユーザ
         </b>
         </span>
