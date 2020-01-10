@@ -129,6 +129,12 @@ class Post(models.Model):
 				# s3で
 				s3 = boto3.resource('s3')
 				bucket = s3.Bucket('asemolotion-blog')
+				
+				diff = '/'.join(diff.split('/')[2:])
+				# '/media/markdownx/b09354f2-24a2-481c-8593-39f781caf38a.png'
+				# を 
+				# 'markdownx/b09354f2-24a2-481c-8593-39f781caf38a.png'　にする。
+				
 				bucket.delete_object(diff)
 				
 
