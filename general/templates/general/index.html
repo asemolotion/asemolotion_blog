@@ -59,7 +59,9 @@
         {% for project in project_list %}        
         <div id='project' class='card'>    
             <div class='card-body'>
-                <h6 class='card-title'>{{ project.name }}</h6>
+                <h6 class='card-title'>
+                    <a href="{% url 'blog:project' project.slug %}" class='text-dark'>
+                    {{ project.name }}</a></h6>
             </div>
         </div>
         {% endfor %}
@@ -82,7 +84,7 @@
             <div class='border rounded px-2 py-2'>
     
             {% for tag in tag_list %}        
-            <a href="#" class='btn btn-sm btn-info'>{{ tag.name }}</a>
+            <a href="{% url 'blog:tag' tag.slug %}" class='btn btn-sm btn-info'>{{ tag.name }}</a>
             {% endfor %}
     
             </div>
