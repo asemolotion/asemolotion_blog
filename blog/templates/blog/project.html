@@ -13,6 +13,12 @@
 <div>
     <section id='postlist'>
 
+        {% if object_list.count == 0 %}
+        <div class='mt-4'>
+            <p class='text-center'>まだ記事はありません</p>
+        </div>
+        {% endif %}
+
         {% for object in object_list %}
             
         <div class='my-3'>
