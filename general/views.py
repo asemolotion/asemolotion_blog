@@ -1,6 +1,8 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from django.shortcuts import render
+from django.urls import reverse
+from django.shortcuts import redirect
 
 from blog.models import Post, Project, Tag
 
@@ -37,3 +39,26 @@ class AboutView(TemplateView):
 
 class ContactView(TemplateView):
     template_name = 'general/contact.html'
+
+
+
+from conf.custom_variables import INVITATION_CODE
+def verify_invitation(request):
+    """
+    招待コード認証を確認するビュー
+    """
+    code = request.POST.get('code')
+
+    if code == INVITATION_CODE:
+        # 招待コードが成功したら以下のセッションキーをつける。
+        request.session['invitation_verification'] = 'ok'
+
+    return redirect(reverse('general:index'))
+
+def clear_invitation(request):
+    """
+    招待コード認証を解消するコマンドのビュー
+    """
+    if request.session.get('invitation_verification'):
+        del request.session['invitation_verification']
+    return redirect(reverse('general:index'))
