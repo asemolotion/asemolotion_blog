@@ -23,53 +23,43 @@
         <section id='bloglist'>
         {% for object in object_list %}
             
-        <div class='rounded border border-warning my-3'>
-            <div class='row'>
-                <!-- 左側のメインの部分 -->
-                <div class='col-9'>
-                    <div class='my-3 px-3 py-3'>
-                        <span>{{ object.project.name }}</span>
-                        <h5>
-                            <a href="{% url 'blog:detail' object.pk %}">{{ object.title }}</a>
-                        </h5>
-                        
-                        
-                        {% if object.description %}
-                        <p><small>{{ object.description }}</small></p>
-                        {% endif %}
-                            
-
-            
-                        {% for tag in object.tags.all %}
-                        <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>    
-                        {% endfor %}                 
-                    </div>
-                </div>
-                <!-- 右側のラベルなど -->
-                <div class='col-3'>
+            <div class='my-3 px-1 py-1'>
+                <span class='text-secondary'><small>{{ object.project.name }}</small></span>
+                <h6>
+                    <!-- タイトルはリンク -->
+                    <a href="{% url 'blog:detail' object.pk %}">{{ object.title }}</a>
+                    <!-- 下書きのもののみ目印をつける。自分用。 -->
+                    {% if object.get_status_display == '下書き' %}
+                    <span class='border rounded border-secondary text-secondary px-1 font-weight-light'>
+                        <small>
+                            {{ object.get_status_display }}
+                        </small></span>
+                    {% endif %}                
                     <!-- LIMITEDの場合、LIMITEDタグをつける -->
                     {% if object.get_release_condition_display == 'LIMITED' %}
-                    <h5 class='float-right'><span class='badge badge-danger font-weight-light'>{{ object.get_release_condition_display }}</span></h5>
-                    {% endif %}
+                    <span class='border rounded border-danger text-danger ml-2 px-1 font-weight-light'>
+                        <small>{{ object.get_release_condition_display }}</small></span>
+                    {% endif %}   
+                </h6>
+                
+                {% if object.description %}
+                <p class='my-0'><small>{{ object.description }}</small></p>
+                {% endif %}
 
-                    <div class='my-3 px-3 py-3'>
-                        
-                        <!-- 下書きのもののみ目印をつける。自分用。 -->
-                        {% if object.get_status_display == '下書き' %}
-                        <p><span class='badge badge-secondary font-weight-light'>{{ object.get_status_display }}</span></p>
-                        {% endif %}
-                            
-                        <!-- Articleは青、ShortCodeは黄色にする -->
-                        {% if object.get_post_type_display == 'Article' %}
-                        <h5><span class='badge badge-primary font-weight-light'>{{ object.get_post_type_display }}</span></h5>        
-                        {% else %}
-                        <h5><span class='badge badge-warning font-weight-light'>{{ object.get_post_type_display }}</span></h5>
-                        {% endif %}
-                                
-                    </div>
-                </div>
+                <!-- Articleは青、ShortCodeは黄色にする -->
+                {% if object.get_post_type_display == 'Article' %}
+                <span class='badge badge-primary font-weight-light'>{{ object.get_post_type_display }}</span>
+                {% else %}
+                <span class='badge badge-warning font-weight-light'>{{ object.get_post_type_display }}</span>
+                {% endif %}
+                
+                <!-- タグはバッヂでつける -->                            
+                {% for tag in object.tags.all %}
+                <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>    
+                {% endfor %}    
+                
             </div>
-        </div>
+
 
         {% endfor %}
             
@@ -84,7 +74,7 @@
             <div class='list-group my-3'>
                 <li class="list-group-item list-group-item-secondary">Projects</li>
                 {% for project in project_list %}
-                <a href="#" class='list-group-item list-group-item-action'>{{ project.name }}</a>    
+                <a href="{% url 'blog:project' project.slug %}" class='list-group-item list-group-item-action'>{{ project.name }}</a>    
                 {% endfor %}
                 <a href="#" class='list-group-item list-group-item-action'> &gt;&gt;&gt; 全てのプロジェクトをみる</a>    
             </div>
@@ -96,7 +86,10 @@
 
                     <h5>
                         {% for tag in tag_list %}
-                        <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>
+                        <span class='badge badge-pill badge-info font-weight-light'>
+                            <a href="{% url 'blog:tag' tag.slug %}" class='text-white'>
+                                {{ tag.name }}
+                            </a></span>
                         {% endfor %}
                     </h5>
                     

@@ -1,0 +1,70 @@
+{% extends '_base.html' %}
+
+
+{% block content %}
+    
+<div class='mt-3'>
+    <section id='title'>
+        <h5 class='text-secondary'>「{{ tag.name }}」タグのついている記事一覧 </h5>
+    </section>
+</div>
+
+
+<div>
+    <section id='postlist'>
+
+        
+        {% if object_list.count == 0 %}
+        <div class='mt-4'>
+            <p class='text-center'>まだ記事はありません</p>
+        </div>
+        {% endif %}
+            
+        {% for object in object_list %}
+            
+        <div class='my-3'>
+            <div class='my-3 px-3 py-3'>
+                <h6><a href="{% url 'blog:detail' object.pk %}">
+                    <!-- タイトルはリンク -->
+                    {{ object.title }}</a>
+                    <!-- 下書きのもののみ目印をつける。自分用。 -->
+                    {% if object.get_status_display == '下書き' %}
+                    <span class='border rounded border-secondary text-secondary px-1 font-weight-light'>
+                        <small>
+                            {{ object.get_status_display }}
+                        </small></span>
+                    {% endif %}                
+                    <!-- LIMITEDの場合、LIMITEDタグをつける -->
+                    {% if object.get_release_condition_display == 'LIMITED' %}
+                    <span class='border rounded border-danger text-danger ml-2 px-1 font-weight-light'>
+                        <small>{{ object.get_release_condition_display }}</small></span>
+                    {% endif %}                      
+                </h6>
+                                        
+                {% if object.description %}
+                <p><small>{{ object.description }}</small></p>
+                {% endif %}
+                    
+                <!-- Articleは青、ShortCodeは黄色にする -->
+                {% if object.get_post_type_display == 'Article' %}
+                <span class='badge badge-primary font-weight-light'>{{ object.get_post_type_display }}</span>
+                {% else %}
+                <span class='badge badge-warning font-weight-light'>{{ object.get_post_type_display }}</span>
+                {% endif %}
+                
+                <!-- タグはバッヂでつける -->
+                {% for tag in object.tags.all %}
+                <span class='badge badge-pill badge-info font-weight-light'>{{ tag.name }}</span>    
+                {% endfor %}                 
+                         
+            </div>
+        </div>            
+
+        {% endfor %}
+            
+        
+    </section>
+</div>
+
+{% endblock content %}
+    

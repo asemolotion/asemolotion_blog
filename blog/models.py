@@ -34,6 +34,7 @@ class Post(models.Model):
 	content = MarkdownxField('本文', help_text='write down in markdown format')
 	
 	tags = models.ManyToManyField(Tag, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.PROTECT, null=True, blank=True, default=None)
 
 	STATUS = (
 		('draft', '下書き'),
@@ -52,8 +53,6 @@ class Post(models.Model):
 		('short_code', 'ShortCode')
 	)
 	post_type = models.CharField('タイプ', max_length=50, choices=POST_TYPE, default='article')
-
-	project = models.ForeignKey(Project, on_delete=models.PROTECT, null=True, blank=True, default=None)
 
 
 	created_at = models.DateTimeField('作成日', auto_now_add=True)
