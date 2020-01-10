@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -8,6 +9,12 @@
     <!-- bs4 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- bs4 end-->
+
+    <!-- highlight -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>        
+    <!-- highlight end -->
 
     <!-- google analytics -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -20,7 +27,9 @@
     gtag('config', 'UA-155874454-1');
     </script>
     <!-- google analytics end -->
-    
+    <!-- my custom style -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <!-- my custom style end -->
 </head>
 
 
