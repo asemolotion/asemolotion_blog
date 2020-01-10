@@ -141,21 +141,29 @@ class Post(models.Model):
 		
 
 		for diff in filelinks_diff:
+			print('消すもの: ', diff)
+			
+			####################
 			# FileLinkデータを消す
+			###################
+			
 			FileLink.objects.filter(
 				filepath=diff
 			).delete()
-
-			print('消すもの: ', diff)
+			
+			###################
 			# ファイルの実体を消す
-			if settings.DEBUG:				
+			###################
+
+			if settings.DEBUG:
+				# ローカルの時
 				delete_filepath = os.path.abspath(os.path.join(settings.BASE_DIR, diff[1:]))  # diff もslashスタートなので、ルートと思ってjoinできない。
 				print('ファイルパスは: ', delete_filepath)
 				os.remove(delete_filepath)
 			
 			else:
-				# s3で
-
+				# s3のファイルを消す時
+				
 				try:
 					# ローカルプロダクションの時は環境変数から取れないので、読み込む
 					from conf.local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
@@ -165,6 +173,7 @@ class Post(models.Model):
 					)
 					s3 = session.resource('s3')
 					print('l167 of models.py s3 read from try')
+				
 				except:
 					s3 = boto3.resource('s3')
 					print('l167 of models.py s3 read from except')
