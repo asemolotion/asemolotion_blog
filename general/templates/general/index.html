@@ -84,7 +84,7 @@
             <div class='border rounded px-2 py-2'>
     
             {% for tag in tag_list %}        
-            <a href="{% url 'blog:tag' tag.slug %}" class='btn btn-sm btn-info'>{{ tag.name }}</a>
+            <a href="{% url 'blog:tag' tag.slug %}" class='btn btn-sm btn-info mt-1'>{{ tag.name }}</a>
             {% endfor %}
     
             </div>
