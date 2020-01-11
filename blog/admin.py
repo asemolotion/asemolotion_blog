@@ -28,14 +28,4 @@ class CustomMarkdownxModelAdmin(MarkdownxModelAdmin):
 		   MarkdownxField: {'widget': CustomAdminMarkdownxWidget}
 	} 
    
-	# class Meta:
-	# 	widgets = {
-	# 		'text': MarkdownxWidget(attrs={
-	# 			# 'class': 'textarea',
-	# 			# 'style': 'height:400px;',
-	# 			# 'rows':50, 
-	# 			# 'cols':40
-	# 			}),
-	# 	}        
-
 admin.site.register(Post, CustomMarkdownxModelAdmin)
