@@ -41,6 +41,35 @@ class FileLink(models.Model):
 	def __str__(self):
 		return self.filepath
 
+	def delete(self):
+		if settings.DEBUG:  # ローカルの時
+			delete_filepath = os.path.abspath(os.path.join(settings.BASE_DIR, self.filepath[1:]))  # diff もslashスタートなので、ルートと思ってjoinできない。
+			print('ファイルパスは: ', delete_filepath)
+			os.remove(delete_filepath)
+		
+		else:
+			# s3のファイルを消す時
+			try:
+				# ローカルプロダクションの時は環境変数から取れないので、読み込む
+				from conf.local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+				session = boto3.Session(
+					aws_access_key_id=AWS_ACCESS_KEY_ID,
+					aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+				)
+				s3 = session.resource('s3')
+				print('l59 of models.py s3 read from try')
+			
+			except:
+				s3 = boto3.resource('s3')
+				print('l64 of models.py s3 read from except')
+
+			bucket = s3.Bucket('asemolotion-blog')
+			
+			diff = '/'.join(diff.split('/')[3:])			
+			# bucket.delete_object(diff)　ではなく、
+			s3.Object('asemolotion-blog', diff).delete()
+		super().delete()		
+
 class Post(models.Model):
 	"""
 	Model definition for ブログの投稿.    
@@ -86,14 +115,22 @@ class Post(models.Model):
 
 	
 	def save(self, **kwargs):
+		super().save(**kwargs)  # まず自分自身を保存しないと初回保存時にLinkFileが保存できない
 
-		# print(self.content)
-		
-		self.check_filelink_diffs()
+		self.check_filelink_diffs()  # 保存する時にファイルのURLの保存
 
-		super().save(**kwargs)
+		super().save(**kwargs)  # 不要?
+
+
+
 
 	def check_filelink_diffs(self):
+		"""
+		content内のファイルURLを抜き出して、保存する
+		contentを編集してファイルURLが増減したら差分を保存、または削除する。
+
+
+		"""
 
 		# もともとあったfilepathを取り出して集合にする
 		old_filelinks_queryset = self.filelink_set.values_list('filepath', flat=True)
@@ -146,10 +183,11 @@ class Post(models.Model):
 			####################
 			# FileLinkデータを消す
 			###################
-			
+
 			FileLink.objects.filter(
 				filepath=diff
 			).delete()
+
 			
 			###################
 			# ファイルの実体を消す
