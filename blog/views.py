@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Post, Project, Tag
 
 class BasePostListView(ListView):
@@ -31,9 +33,30 @@ class PostListView(BasePostListView):
         context['tag_list'] = Tag.objects.all()
         return context
 
-class PostDetailView(DetailView):
+
+class PostDetailView(PermissionRequiredMixin, DetailView):
+    """ 投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件分岐。 """
+    
     model = Post
     template_name = 'blog/detail.html'
+
+    login_url = reverse_lazy('general:index')  # permissionがFalseの時にリダイレクトされるURL
+
+    def has_permission(self):
+        post = self.model.objects.filter(pk=self.kwargs['pk']).first()
+
+        if post.release_condition == 'limited':
+            if self.request.user.is_superuser:
+                return True
+            
+            elif self.request.session.get('invitation_verification') == 'ok':
+                return True
+
+            else:
+                return False
+        else:  # publicのものは全て公開していい。
+            return True
+
 
 
 class ProjectView(BasePostListView):
