@@ -14,6 +14,12 @@ class Project(models.Model):
 	slug = models.SlugField('プロジェクトスラグ', unique=True)
 	timestamp = models.DateTimeField(auto_now_add=True)
 	
+	RELEASE_CONDITION = (
+		('public', '全員に公開'),
+		('limited', 'LIMITED')
+	)
+	release_condition = models.CharField('閲覧制限', max_length=50, choices=RELEASE_CONDITION, default='limited')
+		
 	class Meta:
 		verbose_name = 'Project'
 		verbose_name_plural = 'Projects'

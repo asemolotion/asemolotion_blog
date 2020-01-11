@@ -25,7 +25,9 @@ class IndexView(TemplateView):
                 .order_by('-created_at')[:self.POST_ITEM_COUNT]
         
         # Projectのリスト
-        context['project_list'] = Project.objects.order_by('timestamp')[:self.PROJECT_ITEM_COUNT]
+        context['project_list'] = Project.objects\
+            .filter(release_condition='public')\
+            .order_by('timestamp')[:self.PROJECT_ITEM_COUNT]
 
         # Tagのリスト
         context['tag_list'] = Tag.objects.all()

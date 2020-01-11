@@ -74,7 +74,14 @@
             <div class='list-group my-3'>
                 <li class="list-group-item list-group-item-secondary">Projects</li>
                 {% for project in project_list %}
-                <a href="{% url 'blog:project' project.slug %}" class='list-group-item list-group-item-action'>{{ project.name }}</a>    
+                <a href="{% url 'blog:project' project.slug %}" 
+                class='list-group-item list-group-item-action'>{{ project.name }} 
+                    <!-- LIMITEDの場合、LIMITEDタグをつける -->
+                    {% if project.get_release_condition_display == 'LIMITED' %}
+                    <span class='border rounded border-danger text-danger ml-2 px-1 font-weight-light'>
+                        <small>{{ project.get_release_condition_display }}</small></span>
+                    {% endif %}   
+                </a>
                 {% endfor %}
                 <a href="#" class='list-group-item list-group-item-action'> &gt;&gt;&gt; 全てのプロジェクトをみる</a>    
             </div>

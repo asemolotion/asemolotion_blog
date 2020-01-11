@@ -6,11 +6,12 @@ from .models import Post, Project, Tag
 
 class BasePostListView(ListView):
     """
-    ユーザの属性によって返すPostを制限する機能をもつBaseView
-    """    
+    ユーザの属性によって返すPostとProjectを制限する機能をもつBaseView
+    """
     model = Post
 
-    def get_queryset(self):
+    def get_post_queryset(self):
+
         if self.request.user.is_superuser:
             queryset = self.model.objects.filter()  # all()にしたら連鎖させられないのでfilter()をつけとく。
         
@@ -22,20 +23,35 @@ class BasePostListView(ListView):
         
         return queryset
 
+    def get_project_queryset(self):
+        if self.request.user.is_superuser:
+            queryset = Project.objects.filter()  # all()にしたら連鎖させられないのでfilter()をつけとく。
+        
+        elif self.request.session.get('invitation_verification') == 'ok':
+            queryset = Project.objects.filter()
+
+        else:
+            queryset = Project.objects.exclude(release_condition='limited')
+        
+        return queryset        
+
 
 class PostListView(BasePostListView):
     model = Post
     template_name = 'blog/list.html'
 
+    def get_queryset(self):
+        return super().get_post_queryset()
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['project_list'] = Project.objects.all()
+        context['project_list'] = self.get_project_queryset()
         context['tag_list'] = Tag.objects.all()
         return context
 
 
 class PostDetailView(PermissionRequiredMixin, DetailView):
-    """ 投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件分岐。 """
+    """ 投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件わけあり。 """
     
     model = Post
     template_name = 'blog/detail.html'
@@ -59,15 +75,37 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
 
 
 
-class ProjectView(BasePostListView):
+class ProjectView(PermissionRequiredMixin, BasePostListView):
     """
-    あるプロジェクトに属するPostのリストビュー
+    あるプロジェクトに属するPostのリストビュー。そのプロジェクト自体がLIMITEDならアクセスできない。
     """
     template_name = 'blog/project.html'
     slug = ''
 
+    login_url = reverse_lazy('general:index')  # permissionがFalseの時にリダイレクトされるURL
+    permission_denied_message = 'you did not confirmed yet. please check your email.'
+    
+    def has_permission(self):
+        """ ページの表示か否かの条件分岐 """
+        project = Project.objects.filter(
+            slug=self.kwargs.get('project_slug')
+        ).first()
+
+        if project.release_condition == 'limited':
+            if self.request.user.is_superuser:
+                return True
+            
+            elif self.request.session.get('invitation_verification') == 'ok':
+                return True
+
+            else:
+                return False
+        else:  # publicのものは全て公開していい。
+            return True        
+
+
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_post_queryset()
 
         self.slug = self.kwargs.get('project_slug')
         queryset = queryset.filter(project__slug=self.slug)
@@ -91,7 +129,7 @@ class TagView(BasePostListView):
     slug = ''
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_post_queryset()
 
         self.slug = self.kwargs.get('tag_slug')
         queryset = queryset.filter(tags__slug=self.slug)  # M2Mの1個をだす条件のクエリ
