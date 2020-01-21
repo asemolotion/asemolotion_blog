@@ -17,6 +17,7 @@
     </section>
 </div>
 
+<!-- 本体row -->
 <div class='row'>
 
     <div class='col-md-9'>
@@ -64,6 +65,9 @@
         {% endfor %}
             
         </section>
+        <section id='pagination'>
+            {% include 'pagination.html' %}
+        </section>
     </div>
 
 
@@ -108,6 +112,9 @@
     </div>
 
 </div>
+<!-- 本体row end -->
+
+
 
 {% endblock content %}
     

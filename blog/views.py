@@ -11,7 +11,7 @@ class BasePostListView(ListView):
     model = Post
 
     def get_post_queryset(self):
-
+        # ユーザによって返すPostを制限する
         if self.request.user.is_superuser:
             queryset = self.model.objects.filter()  # all()にしたら連鎖させられないのでfilter()をつけとく。
         
@@ -24,6 +24,8 @@ class BasePostListView(ListView):
         return queryset
 
     def get_project_queryset(self):
+        # ユーザによって返すProjectを制限する
+        
         if self.request.user.is_superuser:
             queryset = Project.objects.filter()  # all()にしたら連鎖させられないのでfilter()をつけとく。
         
@@ -37,7 +39,10 @@ class BasePostListView(ListView):
 
 
 class PostListView(BasePostListView):
+    """ 記事のリストビュー　"""
+    
     model = Post
+    paginate_by = 15
     template_name = 'blog/list.html'
 
     def get_queryset(self):
@@ -46,12 +51,15 @@ class PostListView(BasePostListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['project_list'] = self.get_project_queryset()
-        context['tag_list'] = Tag.objects.all()
+        context['tag_list'] = Tag.objects.all()  # Tagは全て返却
         return context
 
 
 class PostDetailView(PermissionRequiredMixin, DetailView):
-    """ 投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件わけあり。 """
+    """ 
+    投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件わけあり。 
+    条件は PermissionRequiredMixin　で設定。
+    """
     
     model = Post
     template_name = 'blog/detail.html'
@@ -61,7 +69,7 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
     def has_permission(self):
         post = self.model.objects.filter(pk=self.kwargs['pk']).first()
 
-        if post.release_condition == 'limited':
+        if post.release_condition == 'limited':  # 'limited'のものはsuperuserかverificationのみ。
             if self.request.user.is_superuser:
                 return True
             
@@ -70,7 +78,8 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
 
             else:
                 return False
-        else:  # publicのものは全て公開していい。
+        
+        else:  # publicのものは全て公開。
             return True
 
 
