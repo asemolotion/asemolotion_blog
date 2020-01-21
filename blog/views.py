@@ -40,7 +40,7 @@ class BasePostListView(ListView):
 
 class PostListView(BasePostListView):
     """ 記事のリストビュー　"""
-    
+
     model = Post
     paginate_by = 15
     template_name = 'blog/list.html'
@@ -88,6 +88,8 @@ class ProjectView(PermissionRequiredMixin, BasePostListView):
     """
     あるプロジェクトに属するPostのリストビュー。そのプロジェクト自体がLIMITEDならアクセスできない。
     """
+    paginate_by = 15
+
     template_name = 'blog/project.html'
     slug = ''
 
@@ -134,6 +136,8 @@ class TagView(BasePostListView):
     """
     あるタグをもつPostのリストビュー
     """
+    paginate_by = 15
+    
     template_name = 'blog/tag.html'
     slug = ''
 
