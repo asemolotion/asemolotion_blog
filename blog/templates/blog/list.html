@@ -8,10 +8,10 @@
         
         <!-- リンクのナビゲーション -->
         <ul class='nav justify-content-end'>
-            <li class='nav-item'><a href="#" class='nav-link'>全ての記事</a></li>
-            <li class='nav-item'><a href="#" class='nav-link' 
+            <li class='nav-item'><a href="{% url 'blog:list' %}" class='nav-link'>全ての記事</a></li>
+            <li class='nav-item'><a href=".?q=article" class='nav-link' 
                 title='読み物としての記事'>Article</a></li>
-            <li class='nav-item'><a href="#" class='nav-link'
+            <li class='nav-item'><a href=".?q=short_code" class='nav-link'
                 title='プログラムに関する要約記事'>ShortCode</a></li>
         </ul>
     </section>

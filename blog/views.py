@@ -39,14 +39,26 @@ class BasePostListView(ListView):
 
 
 class PostListView(BasePostListView):
-    """ 記事のリストビュー　"""
+    """ 記事のリストビュー　
+    Article or ShortCode　のフィルタ
+    ページング　
+    があり
+    """
 
     model = Post
-    paginate_by = 15
+    paginate_by = 3
     template_name = 'blog/list.html'
 
     def get_queryset(self):
-        return super().get_post_queryset()
+        posts = super().get_post_queryset()
+
+        if self.request.GET.get('q') == 'article':
+            return posts.filter(post_type='article')
+        elif self.request.GET.get('q') == 'short_code':
+            return posts.filter(post_type='short_code')
+        else:
+            return posts
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -87,8 +99,10 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
 class ProjectView(PermissionRequiredMixin, BasePostListView):
     """
     あるプロジェクトに属するPostのリストビュー。そのプロジェクト自体がLIMITEDならアクセスできない。
+    ページング　
+    があり    
     """
-    paginate_by = 15
+    paginate_by = 3
 
     template_name = 'blog/project.html'
     slug = ''
@@ -135,8 +149,10 @@ class ProjectView(PermissionRequiredMixin, BasePostListView):
 class TagView(BasePostListView):
     """
     あるタグをもつPostのリストビュー
+    ページング　
+    があり    
     """
-    paginate_by = 15
+    paginate_by = 3
     
     template_name = 'blog/tag.html'
     slug = ''
