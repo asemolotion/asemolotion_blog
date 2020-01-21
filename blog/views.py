@@ -11,7 +11,7 @@ class BasePostListView(ListView):
     model = Post
 
     def get_post_queryset(self):
-
+        # ユーザによって返すPostを制限する
         if self.request.user.is_superuser:
             queryset = self.model.objects.filter()  # all()にしたら連鎖させられないのでfilter()をつけとく。
         
@@ -24,6 +24,8 @@ class BasePostListView(ListView):
         return queryset
 
     def get_project_queryset(self):
+        # ユーザによって返すProjectを制限する
+        
         if self.request.user.is_superuser:
             queryset = Project.objects.filter()  # all()にしたら連鎖させられないのでfilter()をつけとく。
         
@@ -37,21 +39,39 @@ class BasePostListView(ListView):
 
 
 class PostListView(BasePostListView):
+    """ 記事のリストビュー　
+    Article or ShortCode　のフィルタ
+    ページング　
+    があり
+    """
+
     model = Post
+    paginate_by = 3
     template_name = 'blog/list.html'
 
     def get_queryset(self):
-        return super().get_post_queryset()
+        posts = super().get_post_queryset()
+
+        if self.request.GET.get('q') == 'article':
+            return posts.filter(post_type='article')
+        elif self.request.GET.get('q') == 'short_code':
+            return posts.filter(post_type='short_code')
+        else:
+            return posts
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['project_list'] = self.get_project_queryset()
-        context['tag_list'] = Tag.objects.all()
+        context['tag_list'] = Tag.objects.all()  # Tagは全て返却
         return context
 
 
 class PostDetailView(PermissionRequiredMixin, DetailView):
-    """ 投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件わけあり。 """
+    """ 
+    投稿(Post)の詳細ページ。ユーザの属性で公開、非公開の条件わけあり。 
+    条件は PermissionRequiredMixin　で設定。
+    """
     
     model = Post
     template_name = 'blog/detail.html'
@@ -61,7 +81,7 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
     def has_permission(self):
         post = self.model.objects.filter(pk=self.kwargs['pk']).first()
 
-        if post.release_condition == 'limited':
+        if post.release_condition == 'limited':  # 'limited'のものはsuperuserかverificationのみ。
             if self.request.user.is_superuser:
                 return True
             
@@ -70,7 +90,8 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
 
             else:
                 return False
-        else:  # publicのものは全て公開していい。
+        
+        else:  # publicのものは全て公開。
             return True
 
 
@@ -78,7 +99,11 @@ class PostDetailView(PermissionRequiredMixin, DetailView):
 class ProjectView(PermissionRequiredMixin, BasePostListView):
     """
     あるプロジェクトに属するPostのリストビュー。そのプロジェクト自体がLIMITEDならアクセスできない。
+    ページング　
+    があり    
     """
+    paginate_by = 3
+
     template_name = 'blog/project.html'
     slug = ''
 
@@ -124,7 +149,11 @@ class ProjectView(PermissionRequiredMixin, BasePostListView):
 class TagView(BasePostListView):
     """
     あるタグをもつPostのリストビュー
+    ページング　
+    があり    
     """
+    paginate_by = 3
+    
     template_name = 'blog/tag.html'
     slug = ''
 
