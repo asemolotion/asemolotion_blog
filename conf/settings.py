@@ -137,9 +137,6 @@ except ImportError:
     pass
 
 
-# herokuでもlocalproduction_settingsでもS3の保存期間 約5年
-AWS_QUERYSTRING_EXPIRE = '157784630'
-
 # herokuの時
 if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY']
@@ -172,4 +169,6 @@ if not DEBUG:
     AWS_STORAGE_BUCKET_NAME = 'asemolotion-blog'
     AWS_DEFAULT_ACL = None    
 
-    AWS_QUERYSTRING_EXPIRE = '157784630'
+    # herokuでもlocalproduction_settingsでもS3の保存期間 約5年
+    AWS_QUERYSTRING_EXPIRE = '157784630'  # 
+    AWS_S3_CUSTOM_DOMAIN = "https://%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
