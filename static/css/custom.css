@@ -3,3 +3,9 @@ pre > code {
     font-size: 80%
     /* コードは他の文字より小さくする */
 }
+
+img {
+    border: 1px solid gray !important;
+    width:100%;
+    /* 画像幅を画面幅に合わせるため。 */
+}
