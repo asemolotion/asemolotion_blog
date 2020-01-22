@@ -117,8 +117,15 @@ class Post(models.Model):
 		return self.title
 
 	def formatted_markdown(self):
+		custom = """
+		<style type='text/css'>
+		img {
+			border: 1px solid gray;
+		}
+		</style>		
+		"""
+		# return custom + markdownify(self.content)
 		return markdownify(self.content)
-
 	
 	def save(self, **kwargs):
 		super().save(**kwargs)  # まず自分自身を保存しないと初回保存時にLinkFileが保存できない
