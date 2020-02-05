@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'markdownx',
     'storages',
     'django_cleanup',
-    'django_extensions'
+    # 'django_extensions' => pygraphvizあるのでローカルのみ。
 ]
 
 MIDDLEWARE = [
@@ -137,6 +137,9 @@ try:
 except ImportError:
     pass
 
+
+if DEBUG:
+    INSTALLED_APPS += ['django_extensions',]  # django-extensions
 
 # herokuの時
 if not DEBUG:
