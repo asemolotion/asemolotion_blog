@@ -9,3 +9,8 @@ img {
     width:100%;
     /* 画像幅を画面幅に合わせるため。 */
 }
+
+#githubicon {
+    border: none !important;
+    width:10% !important;
+}
