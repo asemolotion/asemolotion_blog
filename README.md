@@ -83,3 +83,13 @@ DATABASES['default'] = {
 DEBUG = True  # => STATIC_ROOTを使う？ 
 
 ```
+
+
+## 始めてみる Getting Started
+
+```
+
+
+
+```
+
