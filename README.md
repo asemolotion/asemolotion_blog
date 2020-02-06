@@ -1,12 +1,19 @@
-# asemolotion_blog
+# Asemolotion Blog
 remote of asemolotion_blog working directory.
-
 this is repository of my blog site in 2020~
 
-### 環境
+## 概要 Overview
+
+これはdjangoで作られた私のブログサイトです。[こちら](https://asemolotion-blog.herokuapp.com/)で実際のサイトをご確認できます。
+Heroku上のフリープランで動いている時もあるので、起動が遅いかもしれません。私の就職活動のために、できる技術やできない技術、学んだ知識を記録するブログを残すために、このアプリケーションを作成しました。(2020.01〜)
+
+This is my Blog site based on django project. [THIS](https://asemolotion-blog.herokuapp.com/) is the site, deployed on heroku.
+Because of its free plan, you may have to wait some time to show my site. I made it to record my technical issues, some code, good knowledge and these all are for my job hunting. (2020.01〜)
+
+## 環境 Env
 
 
-### ローカルで準備するもの
+## ローカルで準備するもの What needed for develop
 conf/local_settings.py はローカルの開発環境の設定。
 conf/local_production_settings.py はローカルで運用環境のDB,ホスティングを使うときの設定。
 
