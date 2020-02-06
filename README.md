@@ -3,9 +3,15 @@ remote of asemolotion_blog working directory.
 
 this is repository of my blog site in 2020~
 
+### 環境
+
 
 ### ローカルで準備するもの
-local_settings.py
+conf/local_settings.py はローカルの開発環境の設定。
+conf/local_production_settings.py はローカルで運用環境のDB,ホスティングを使うときの設定。
+
+
+- local_settings.py
 ```
 import os
 
@@ -40,7 +46,7 @@ PG_PORT = <string:DB port>
 INVITATION_CODE_VAL = <string:自由に決める招待コード>
 ```
 
-local_production_settings.py
+- local_production_settings.py
 ```
 # import 順番も大事。まず一般設定をimportして、ローカルのものをimport,そして上書き。
 from .settings import *
