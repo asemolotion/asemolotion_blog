@@ -14,7 +14,7 @@ Because of its free plan, you may have to wait some time to show my site. I made
 
 
 ## ローカルで準備するもの What needed for develop
-conf/local_settings.py はローカルの開発環境の設定。
+conf/local_settings.py はローカルの開発環境の設定。  
 conf/local_production_settings.py はローカルで運用環境のDB,ホスティングを使うときの設定。
 
 
