@@ -46,18 +46,18 @@ class PostListView(BasePostListView):
     """
 
     model = Post
-    paginate_by = 3
+    paginate_by = 15
     template_name = 'blog/list.html'
 
     def get_queryset(self):
         posts = super().get_post_queryset()
 
         if self.request.GET.get('q') == 'article':
-            return posts.filter(post_type='article')
+            return posts.filter(post_type='article').order_by('-created_at')
         elif self.request.GET.get('q') == 'short_code':
-            return posts.filter(post_type='short_code')
+            return posts.filter(post_type='short_code').order_by('-created_at')
         else:
-            return posts
+            return posts.order_by('-created_at')
 
     
     def get_context_data(self, **kwargs):
